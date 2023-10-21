@@ -66,8 +66,7 @@ Punctuation
 NewLine
 JsonPropertyName
 Punctuation
-Punctuation
-Numeric
+JsonPropertyName
 Punctuation
 NewLine
 NewLine

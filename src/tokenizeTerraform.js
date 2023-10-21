@@ -124,7 +124,7 @@ const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
 const RE_STRING_BACKTICK_QUOTE_CONTENT = /^[^`\\\$]+/
 const RE_STRING_ESCAPE = /^\\./
 const RE_PUNCTUATION = /^[\(\)=\+\-><\.:;\{\}\[\]!,&\|\^\?\*%~]/
-const RE_VARIABLE_NAME = /^[a-zA-Z_$][a-zA-Z\d\_]*/
+const RE_VARIABLE_NAME = /^[a-zA-Z_$\-][a-zA-Z\d\_]*/
 
 export const initialLineState = {
   state: State.TopLevelContent,

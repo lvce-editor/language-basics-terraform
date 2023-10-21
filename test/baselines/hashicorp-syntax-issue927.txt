@@ -71,7 +71,6 @@ Whitespace
 JsonPropertyName
 Punctuation
 JsonPropertyName
-Punctuation
 JsonPropertyName
 NewLine
 Punctuation
@@ -102,11 +101,9 @@ Whitespace
 JsonPropertyName
 Punctuation
 JsonPropertyName
-Punctuation
 JsonPropertyName
 Punctuation
 JsonPropertyName
-Punctuation
 JsonPropertyName
 NewLine
 Punctuation

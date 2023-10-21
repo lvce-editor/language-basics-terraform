@@ -21,7 +21,6 @@ Whitespace
 Numeric
 NewLine
 NewLine
-Punctuation
 JsonPropertyName
 NewLine
 NewLine

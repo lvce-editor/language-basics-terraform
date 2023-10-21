@@ -6,10 +6,8 @@ Punctuation
 NewLine
 Whitespace
 JsonPropertyName
-Punctuation
 JsonPropertyName
-Punctuation
-Numeric
+JsonPropertyName
 Whitespace
 Punctuation
 Whitespace

@@ -1,0 +1,13 @@
+{
+  "id": "builtin.language-basics-terraform",
+  "name": "Language Basics Terraform",
+  "description": "Provides syntax highlighting and bracket matching in Terraform files.",
+  "languages": [
+    {
+      "id": "terraform",
+      "extensions": [".tf"],
+      "tokenize": "src/tokenizeTerraform.js",
+      "configuration": "languageConfiguration.json"
+    }
+  ]
+}

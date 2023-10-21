@@ -114,12 +114,17 @@ const RE_NUMBER =
 const RE_KEYWORD_EXPORT = /^export(?=(\t| ))/
 const RE_CONSTANT = /^(true|false|null)(?=\s|$)/i
 const RE_VARIABLE_VALUE = /^[^\n"'#]+/
-const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^\n\\"]+/
-const RE_STRING_SINGLE_QUOTE_CONTENT = /^[^\n\\']+/
 const RE_SINGLE_QUOTE = /^'/
 const RE_NEWLINE_AND_WHITESPACE = /^\n\s*/
 const RE_BACKSLASH = /^\\/
 const RE_EVERYTHING = /^./
+const RE_QUOTE_SINGLE = /^'/
+const RE_QUOTE_DOUBLE = /^"/
+const RE_QUOTE_BACKTICK = /^`/
+const RE_STRING_SINGLE_QUOTE_CONTENT = /^[^'\\]+/
+const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
+const RE_STRING_BACKTICK_QUOTE_CONTENT = /^[^`\\\$]+/
+const RE_STRING_ESCAPE = /^\\./
 
 export const initialLineState = {
   state: State.TopLevelContent,
@@ -147,9 +152,29 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_LINE_COMMENT))) {
           token = TokenType.Comment
           state = State.TopLevelContent
+        } else if ((next = part.match(RE_QUOTE_DOUBLE))) {
+          token = TokenType.Punctuation
+          state = State.InsideDoubleQuoteString
         } else if ((next = part.match(RE_ANYTHING_UNTIL_END))) {
           token = TokenType.Text
           state = State.TopLevelContent
+        } else {
+          throw new Error('no')
+        }
+        break
+      case State.InsideDoubleQuoteString:
+        if ((next = part.match(RE_QUOTE_DOUBLE))) {
+          token = TokenType.Punctuation
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_STRING_DOUBLE_QUOTE_CONTENT))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_STRING_ESCAPE))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_BACKSLASH))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
         } else {
           throw new Error('no')
         }

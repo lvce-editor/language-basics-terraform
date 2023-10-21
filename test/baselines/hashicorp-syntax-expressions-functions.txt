@@ -31,6 +31,9 @@ Text
 NewLine
 Text
 NewLine
+Punctuation
+String
+Punctuation
 Text
 NewLine
 Text

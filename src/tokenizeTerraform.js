@@ -91,7 +91,6 @@ const RE_LINE_COMMENT = /^(?:\/\/|#).*/s
 const RE_ROUND_OPEN = /^\(/
 const RE_ROUND_CLOSE = /^\)/
 const RE_DOT = /^\./
-const RE_PUNCTUATION = /^[\(\)=\+\-><\.,\/\*\^\[\]\{\}\|:]/
 const RE_ANYTHING_UNTIL_END = /^.+/s
 const RE_START_OF_FUNCTION = /^( )*\(/
 const RE_COLON_COLON = /^::/
@@ -106,7 +105,6 @@ const RE_TEXT = /^.+/s
 const RE_WHITESPACE = /^\s+/
 const RE_WHITESPACE_SINGLE_LINE = /^( |\t)+/
 const RE_DOUBLE_QUOTE = /^"/
-const RE_VARIABLE_NAME = /^[a-zA-Z\_]+/
 const RE_EQUAL_SIGN = /^=/
 const RE_NUMBER =
   /^\b((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)\b/
@@ -125,6 +123,8 @@ const RE_STRING_SINGLE_QUOTE_CONTENT = /^[^'\\]+/
 const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
 const RE_STRING_BACKTICK_QUOTE_CONTENT = /^[^`\\\$]+/
 const RE_STRING_ESCAPE = /^\\./
+const RE_PUNCTUATION = /^[\(\)=\+\-><\.:;\{\}\[\]!,&\|\^\?\*%~]/
+const RE_VARIABLE_NAME = /^[a-zA-Z_$][a-zA-Z\d\_]*/
 
 export const initialLineState = {
   state: State.TopLevelContent,
@@ -155,6 +155,15 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_QUOTE_DOUBLE))) {
           token = TokenType.Punctuation
           state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_VARIABLE_NAME))) {
+          token = TokenType.VariableName
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_PUNCTUATION))) {
+          token = TokenType.Punctuation
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_NUMERIC))) {
+          token = TokenType.Numeric
+          state = State.TopLevelContent
         } else if ((next = part.match(RE_ANYTHING_UNTIL_END))) {
           token = TokenType.Text
           state = State.TopLevelContent

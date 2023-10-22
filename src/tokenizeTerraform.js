@@ -125,6 +125,7 @@ const RE_SLASH = /^\//
 const RE_BLOCK_COMMENT_START = /^\/\*/
 const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
 const RE_BLOCK_COMMENT_END = /^\*\//
+const RE_VARIABLE_NAME_SPECIAL = /\p{L}/u
 
 const RE_KEYWORD = /^(?:false|true)\b/
 
@@ -186,6 +187,9 @@ export const tokenizeLine = (line, lineState) => {
           }
         } else if ((next = part.match(RE_NUMERIC))) {
           token = TokenType.Numeric
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_VARIABLE_NAME_SPECIAL))) {
+          token = TokenType.VariableName
           state = State.TopLevelContent
         } else if ((next = part.match(RE_ANYTHING_UNTIL_END))) {
           token = TokenType.Text

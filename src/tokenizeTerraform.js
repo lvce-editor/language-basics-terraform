@@ -97,8 +97,6 @@ const RE_ANY_CHAR = /^./
 const RE_SQUARE_OPEN_SQUARE_OPEN = /^\[\[/
 const RE_SQUARE_CLOSE_SQUARE_CLOSE = /^\]\]/
 const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
-const RE_KEYWORD =
-  /^(?:var|type|switch|struct|select|return|range|package|map|interface|import|if|goto|go|func|default|continue|const|chan|case|break)\b/
 const RE_TEXT = /^.+/s
 const RE_WHITESPACE = /^\s+/
 const RE_WHITESPACE_SINGLE_LINE = /^( |\t)+/
@@ -127,6 +125,8 @@ const RE_SLASH = /^\//
 const RE_BLOCK_COMMENT_START = /^\/\*/
 const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
 const RE_BLOCK_COMMENT_END = /^\*\//
+
+const RE_KEYWORD = /^(?:false|true)\b/
 
 export const initialLineState = {
   state: State.TopLevelContent,
@@ -157,6 +157,18 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_QUOTE_DOUBLE))) {
           token = TokenType.Punctuation
           state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_KEYWORD))) {
+          switch (next[0]) {
+            case 'true':
+            case 'false':
+              token = TokenType.LanguageConstant
+              state = State.TopLevelContent
+              break
+            default:
+              token = TokenType.Keyword
+              state = State.TopLevelContent
+              break
+          }
         } else if ((next = part.match(RE_VARIABLE_NAME))) {
           token = TokenType.VariableName
           state = State.TopLevelContent

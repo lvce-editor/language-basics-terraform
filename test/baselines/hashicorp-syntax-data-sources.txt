@@ -15,7 +15,7 @@ JsonPropertyName
 Whitespace
 Punctuation
 Whitespace
-JsonPropertyName
+LanguageConstant
 NewLine
 NewLine
 Whitespace

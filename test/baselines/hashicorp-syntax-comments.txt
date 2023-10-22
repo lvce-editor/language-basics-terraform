@@ -4,13 +4,9 @@ NewLine
 Comment
 NewLine
 NewLine
-Text
+Comment
 NewLine
-Whitespace
-JsonPropertyName
-Whitespace
-JsonPropertyName
+Comment
 NewLine
-Punctuation
-Text
+Comment
 NewLine

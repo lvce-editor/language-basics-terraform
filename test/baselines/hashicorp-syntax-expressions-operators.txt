@@ -11,7 +11,9 @@ Punctuation
 Whitespace
 Numeric
 Whitespace
-Text
+Punctuation
+Whitespace
+Numeric
 NewLine
 NewLine
 Numeric

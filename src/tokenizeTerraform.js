@@ -13,6 +13,7 @@ export const State = {
   InsideSingleQuoteString: 9,
   InsideDoubleQuoteStringAfterBackslash: 10,
   InsideSingleQuoteStringAfterBackslash: 11,
+  InsideBlockComment: 12,
 }
 
 /**
@@ -81,9 +82,6 @@ const RE_NUMERIC =
   /^((0(x|X)[0-9a-fA-F]*)|(([0-9]+\.?[0-9]*)|(\.[0-9]+))((e|E)(\+|-)?[0-9]+)?)/
 
 const RE_NEWLINE_WHITESPACE = /^\n\s*/
-const RE_BLOCK_COMMENT_START = /^\/\*/
-const RE_BLOCK_COMMENT_CONTENT = /^.+(?=\*\/|$)/s
-const RE_BLOCK_COMMENT_END = /^\*\//
 const RE_UNKNOWN_VALUE = /^[^\}\{\s,"]+/
 const RE_IMPORT = /^[a-zA-Z\.]+/
 const RE_SEMICOLON = /^;/
@@ -125,6 +123,10 @@ const RE_STRING_BACKTICK_QUOTE_CONTENT = /^[^`\\\$]+/
 const RE_STRING_ESCAPE = /^\\./
 const RE_PUNCTUATION = /^[\(\)=\+\-><\.:;\{\}\[\]!,&\|\^\?\*%~]/
 const RE_VARIABLE_NAME = /^[a-zA-Z_$\-][a-zA-Z\d\_]*/
+const RE_SLASH = /^\//
+const RE_BLOCK_COMMENT_START = /^\/\*/
+const RE_BLOCK_COMMENT_CONTENT = /^.+?(?=\*\/)/
+const RE_BLOCK_COMMENT_END = /^\*\//
 
 export const initialLineState = {
   state: State.TopLevelContent,
@@ -161,6 +163,15 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_PUNCTUATION))) {
           token = TokenType.Punctuation
           state = State.TopLevelContent
+        } else if ((next = part.match(RE_SLASH))) {
+          if ((next = part.match(RE_BLOCK_COMMENT_START))) {
+            token = TokenType.Comment
+            state = State.InsideBlockComment
+          } else {
+            next = part.match(RE_SLASH)
+            token = TokenType.Punctuation
+            state = State.TopLevelContent
+          }
         } else if ((next = part.match(RE_NUMERIC))) {
           token = TokenType.Numeric
           state = State.TopLevelContent
@@ -184,6 +195,20 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_BACKSLASH))) {
           token = TokenType.String
           state = State.InsideDoubleQuoteString
+        } else {
+          throw new Error('no')
+        }
+        break
+      case State.InsideBlockComment:
+        if ((next = part.match(RE_BLOCK_COMMENT_END))) {
+          token = TokenType.Comment
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_BLOCK_COMMENT_CONTENT))) {
+          token = TokenType.Comment
+          state = State.InsideBlockComment
+        } else if ((next = part.match(RE_ANYTHING_UNTIL_END))) {
+          token = TokenType.Comment
+          state = State.InsideBlockComment
         } else {
           throw new Error('no')
         }
